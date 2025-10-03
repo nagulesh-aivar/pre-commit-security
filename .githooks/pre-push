@@ -1,0 +1,7 @@
+#!/bin/sh
+# Secret scan before push using ggshield
+ggshield secret scan pre-push
+if [ $? -ne 0 ]; then
+    echo "Secrets were found! Please fix and push again."
+    exit 1
+fi
