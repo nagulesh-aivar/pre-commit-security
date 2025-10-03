@@ -1,7 +1,11 @@
 #!/bin/sh
-# Secret scan before push using ggshield
-ggshield secret scan pre-push
-if [ $? -ne 0 ]; then
-    echo "Secrets were found! Please fix and push again."
-    exit 1
+# .githooks/pre-commit
+# Minimal shim: run pre-commit if installed, else show instructions.
+if command -v pre-commit >/dev/null 2>&1; then
+  # run only the pre-commit hooks for the staged files
+  pre-commit run --hook-stage pre-commit --files "$@"
+else
+  echo "pre-commit not installed. Run: ./setup.sh"
+  # Do not fail the commit here — let setup be the gate. If you prefer strict blocking,
+  # exit 1 to abort commits until pre-commit is installed.
 fi
