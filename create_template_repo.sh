@@ -22,7 +22,7 @@ cd "$REPO" || exit 1
 # --- Create the files (you can instead prepare them in a folder and copy) ---
 cat > README.md <<'EOF'
 # Template: Secret-scan + pre-commit
-This template provides a pre-commit configuration (detect-secrets / ggshield) and CI scanning with gitleaks.
+This template provides a pre-commit configuration (detect-secrets) and CI scanning with gitleaks.
 Run ./setup.sh after cloning to install hooks locally.
 EOF
 
@@ -30,16 +30,11 @@ EOF
 cat > .pre-commit-config.yaml <<'EOF'
 repos:
   - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.4.0
+    rev: v1.5.0
     hooks:
       - id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
-        stages: [commit]
-  - repo: https://github.com/gitguardian/ggshield
-    rev: v1.13.1
-    hooks:
-      - id: ggshield
-        stages: [commit]
+        stages: [pre-commit]
 EOF
 
 mkdir -p .githooks .github/workflows
@@ -57,7 +52,7 @@ cat > setup.sh <<'EOF'
 #!/bin/bash
 set -e
 git config core.hooksPath .githooks
-python3 -m pip install --user pre-commit detect-secrets ggshield || true
+python3 -m pip install --user pre-commit detect-secrets || true
 pre-commit install --hook-type pre-commit
 pre-commit install --hook-type pre-push || true
 if [ ! -f .secrets.baseline ]; then
