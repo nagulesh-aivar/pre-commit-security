@@ -40,7 +40,6 @@ If secrets are detected, the commit will be blocked.
 
 ## Template Status
 
-✅ GitGuardian removed
 ✅ detect-secrets configured
 ✅ Secrets baseline ready
 ✅ Git hooks configured
